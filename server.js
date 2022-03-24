@@ -72,8 +72,7 @@ app.get('/app/flip/', (req, res) => {
 
 app.get('/app/flips:number', (req, res) => {
     var endFlips = coinFlips(req.params.number)
-    var flips = coinflips(req.params.number)
-    res.status(200).json({ 'raw': flips, 'summary': countFlips(endFlips) })
+    res.status(200).json({ 'raw': endFlips, 'summary': countFlips(endFlips) })
 })
 
 
@@ -83,7 +82,7 @@ app.get('/app/flip/call/heads', (req, res) => {
 })
 
 app.get('/app/flip/call/tails', (req, res) => {
-    const randomFlip = flipACoin("heads")
+    const randomFlip = flipACoin("tails")
     res.status(200).json({ "call": randomFlip.call, "flip": randomFLip.flip, "result": flipRandomCoin.result })
 })
 

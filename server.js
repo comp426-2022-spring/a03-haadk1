@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const arguments = require('minimist')(process.argv.slice(2))
+arguments["port"]
 
 
 var port = arguments.port || process.env.port || 5000
@@ -24,11 +25,13 @@ function coinFlip() {
 
 
 function coinFlips(flips) {
-    const arr = []
-    for (let i = 0; i < flips; i++) {
-        arr[i] = Math.floor(Math.random() * 2) == 0 ? 'heads' : 'tails'
+    let flipCount = flips;
+    const flipResults = new Array();
+    while(flipCount>0) {
+      flipResults.push(coinFlip());
+      flipCount--;
     }
-    return arr;
+    return flipResults;
 }
 
 function countFlips(array) {
@@ -48,18 +51,12 @@ function countFlips(array) {
 }
 
 function flipACoin(call) {
-    var count = {
-        call: call,
-        flip: coinFlip(call),
-        result: ''
+    const correct = coinFlip();
+    if(correct == call) {
+      return {'call': call, 'flip': correct, 'result': 'win'};
+    } else {
+      return {'call': call, 'flip': correct, 'result': 'lose'};
     }
-    if (count.call == count.flip) {
-        count.result = 'win'
-    }
-    else {
-        count.result = 'lose'
-    }
-    return count
 }
 
 
@@ -67,24 +64,31 @@ function flipACoin(call) {
 
 app.get('/app/flip/', (req, res) => {
     var flip = coinFlip()
-    res.status(200).json({ 'flip': flip })
+    res.status(200).json({ "flip": flip })
 })
 
 app.get('/app/flips:number', (req, res) => {
-    var endFlips = coinFlips(req.params.number)
-    res.status(200).json({ 'raw': endFlips, 'summary': countFlips(endFlips) })
+    var number = req.params.number;
+    var endFlips = coinFlips(number);
+    var final = countFlips(endFlips)
+    res.status(200).json({ 'raw': endFlips, 'summary': final })
 })
 
 
 app.get('/app/flip/call/heads', (req, res) => {
-    const randomFlip = flipACoin("heads")
-    res.status(200).json({ "call": randomFlip.call, "flip": randomFLip.flip, "result": flipRandomCoin.result })
-})
+    const result = flipACoin('heads');
+    res.status(200).json({
+        result
+    })
+});
 
 app.get('/app/flip/call/tails', (req, res) => {
-    const randomFlip = flipACoin("tails")
-    res.status(200).json({ "call": randomFlip.call, "flip": randomFLip.flip, "result": flipRandomCoin.result })
-})
+    const result = flipACoin('tails');
+    res.status(200).json({
+        result
+    })
+});
+
 
 
 

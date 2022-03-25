@@ -89,7 +89,7 @@ app.get('/app/flip/call/tails', (req, res) => {
 
 
 
-// Default response for any other request
+// Default response for any other request.
 app.use(function (req, res) {
     res.status(404).send('404 NOT FOUND')
 });

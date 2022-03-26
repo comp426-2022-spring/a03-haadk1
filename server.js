@@ -68,10 +68,9 @@ app.get('/app/flip/', (req, res) => {
 })
 
 app.get('/app/flips:number', (req, res) => {
-    var number = req.params.number;
-    var endFlips = coinFlips(number);
-    var final = countFlips(endFlips)
-    res.status(200).json({ 'raw': endFlips, 'summary': final })
+    var flips = coinFlips(req.params.number)
+    var count = countFlips(flips)
+    res.status(200).json( {'raw': flips, 'summary':count})
 })
 
 
